@@ -4,6 +4,8 @@ import './index.css';
 import App from './App';
 import MainPage from "./pages/main";
 import ScorePage from "./pages/score";
+import CommonPage from "./hocPages/common/index";
+import HocPage from "./hocPages/higher/index";
 import { BrowserRouter, Route } from "react-router-dom";
 import { createStore } from "redux";
 import { Provider } from "react-redux";
@@ -34,6 +36,8 @@ ReactDOM.render(
                 <Route path="/home" component={App} />
                 <Route path="/main" component={MainPage} />
                 <Route path="/score" component={ScorePage} />
+                <Route path="/common" component={CommonPage} />         
+                <Route path="/hoc" component={HocPage} />                                       
             </div>
         </BrowserRouter>
     </Provider>
