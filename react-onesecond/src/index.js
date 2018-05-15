@@ -6,11 +6,19 @@ import MainPage from "./pages/main";
 import ScorePage from "./pages/score";
 import CommonPage from "./hocPages/common/index";
 import HocPage from "./hocPages/higher/index";
+import graphPage from "./graphqlPages/index";
 import { BrowserRouter, Route } from "react-router-dom";
 import { createStore } from "redux";
 import { Provider } from "react-redux";
 import registerServiceWorker from './registerServiceWorker';
 
+import { ApolloProvider } from "react-apollo";
+import ApolloClient from "apollo-boost";
+import gql from "graphql-tag";
+const client = new ApolloClient({
+    // uri: "https://w5xlvm3vzz.lp.gql.zone/graphql"
+    uri:'http://localhost:3000/graphql'
+});
 function todos(state = {}, action) {
     switch (action.type) {
         case 'PUSH_SCORE':
@@ -30,16 +38,19 @@ function todos(state = {}, action) {
 const store = createStore(todos)
 
 ReactDOM.render(
-    <Provider store={store}>
-        <BrowserRouter basename="/">
-            <div>
-                <Route path="/home" component={App} />
-                <Route path="/main" component={MainPage} />
-                <Route path="/score" component={ScorePage} />
-                <Route path="/common" component={CommonPage} />         
-                <Route path="/hoc" component={HocPage} />                                       
-            </div>
-        </BrowserRouter>
-    </Provider>
+    <ApolloProvider client={client}>
+        <Provider store={store}>
+            <BrowserRouter basename="/">
+                <div>
+                    <Route path="/home" component={App} />
+                    <Route path="/main" component={MainPage} />
+                    <Route path="/score" component={ScorePage} />
+                    <Route path="/common" component={CommonPage} />
+                    <Route path="/hoc" component={HocPage} />
+                    <Route path="/graphql" component={graphPage} />
+                </div>
+            </BrowserRouter>
+        </Provider>
+    </ApolloProvider>
     , document.getElementById('root'));
 registerServiceWorker();
