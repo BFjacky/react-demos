@@ -3,7 +3,7 @@ const bodyParser = require('body-parser');
 const cors = require('express-cors');
 const { graphqlExpress, graphiqlExpress } = require('apollo-server-express');
 const { makeExecutableSchema } = require('graphql-tools');
-
+const { getAllGames } = require('./db.js')
 // Some fake data
 const books = [
   {
@@ -16,25 +16,9 @@ const books = [
   },
 ];
 
-const games = [
-  {
-    name: '绝地求生',
-    price: "98元"
-  },
-  {
-    name: '守望先锋',
-    price: '198元'
-  },
-  {
-    name: '穿越火线',
-    price: "1w以上"
-  }
-]
-
 // The GraphQL schema in string form
 const typeDefs = `
-  type Query { books: [Book], games:[Game],addGames:[Game] }
-  type Book { title: String, author: String }
+  type Query {  games:[Game],addGames:[Game] }
   type Game { name:String, price:String }
   type Mutation {
     addGames(name:String,price:String):Game
@@ -45,14 +29,16 @@ const typeDefs = `
 // The resolvers
 const resolvers = {
   Query: {
-    books: () => books,
-    games: () => games,
+    games: async () => {
+      const games = await getAllGames();
+      return games;
+    },
   },
   Mutation: {
-    addGames: (var1, var2) => {
+    addGames: (obj, args) => {
       //在这里执行db操作
-      // games.push({ name, price })
-      console.log(var1, var2)
+      games.push(args)
+      console.log(args)
     }
   }
 };

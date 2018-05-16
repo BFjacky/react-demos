@@ -15,6 +15,7 @@
     "express": "^4.16.3",
     "express-cors": "^v0.0.3",
     "graphql": "^0.13.2",
-    "graphql-tools": "^3.0.1"
+    "graphql-tools": "^3.0.1",
+    "rethinkdb": "^2.3.3"
   }
 }
