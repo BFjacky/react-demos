@@ -33,17 +33,28 @@ const games = [
 
 // The GraphQL schema in string form
 const typeDefs = `
-  type Query { books: [Book],games:[Game] }
+  type Query { books: [Book], games:[Game],addGames:[Game] }
   type Book { title: String, author: String }
-  type Game {name:String, price:String}
+  type Game { name:String, price:String }
+  type Mutation {
+    addGames(name:String,price:String):Game
+  }
+
 `;
 
 // The resolvers
 const resolvers = {
   Query: {
     books: () => books,
-    games: () => games
+    games: () => games,
   },
+  Mutation: {
+    addGames: (var1, var2) => {
+      //在这里执行db操作
+      // games.push({ name, price })
+      console.log(var1, var2)
+    }
+  }
 };
 
 // Put together a schema

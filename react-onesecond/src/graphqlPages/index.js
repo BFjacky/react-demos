@@ -1,15 +1,15 @@
 import React, { Component } from 'react';
 import { Query, Mutation } from "react-apollo";
 import gql from "graphql-tag";
-const ADD_TODO = gql`
-    mutation addTodo($type: String!) {
-        addTodo(type: $type) {
-            id
-            type
+const ADD_GAMES = gql`
+    mutation addGames($name: String,$price:String) {
+        addGames(name: $name,price:$price) {
+            name
+            price
         }
     }
 `;
-const GET_TODOS = gql`
+const GET_GAMES = gql`
     query games {
         games {
             name
@@ -18,7 +18,7 @@ const GET_TODOS = gql`
     }
 `;
 const QueryComponent = () => (
-    <Query query={GET_TODOS}>
+    <Query query={GET_GAMES} >
         {({ loading, error, data }) => {
             if (loading) return <p>Loading...</p>;
             if (error) return <p>Error :(</p>;
@@ -33,22 +33,13 @@ const QueryComponent = () => (
 const MutationComponent = () => {
     let input;
     return (
-        <Mutation
-            mutation={ADD_TODO}
-            update={(cache, { data: { addTodo } }) => {
-                const { todos } = cache.readQuery({ query: GET_TODOS });
-                cache.writeQuery({
-                    query: GET_TODOS,
-                    data: { todos: todos.concat([addTodo]) }
-                });
-            }}
-        >
-            {(addTodo, { data }) => (
+        <Mutation mutation={ADD_GAMES}>
+            {(addGames, { data }) => (
                 <div>
                     <form
                         onSubmit={e => {
                             e.preventDefault();
-                            addTodo({ variables: { type: input.value } });
+                            addGames({ variables: { name: "wow", price: "98" } });
                             input.value = "";
                         }}
                     >
@@ -57,7 +48,7 @@ const MutationComponent = () => {
                                 input = node;
                             }}
                         />
-                        <button type="submit">Add Todo</button>
+                        <button type="submit">Add Game</button>
                     </form>
                 </div>
             )}
