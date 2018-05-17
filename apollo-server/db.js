@@ -15,6 +15,7 @@ exports.getAllGames = function () {
     return new Promise((resolve, reject) => {
         if (!connection) {
             resolve(`not connect`);
+            return;
         }
         r.table('games').run(connection, function (err, cursor) {
             if (err) throw err;
@@ -23,6 +24,28 @@ exports.getAllGames = function () {
                 else resolve(result);
             });
         });
+    })
+}
+
+exports.insertGame = function (game) {
+    return new Promise((resolve, reject) => {
+        if (!connection) {
+            resovle(`not connect`);
+            return;
+        }
+        if (!game) {
+            resolve(`params invalid`);
+            return;
+        }
+        if (!game.name || !game.price) {
+            resolve(`params invalid`);
+            return;
+        }
+        r.table('games').insert([{ name: game.name, price: game.price }]).run(connection, function (err, result) {
+            if (err) throw err;
+            console.log(JSON.stringify(result, null, 2));
+            resolve(`ok`)
+        })
     })
 }
 

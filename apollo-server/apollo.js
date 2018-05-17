@@ -3,18 +3,7 @@ const bodyParser = require('body-parser');
 const cors = require('express-cors');
 const { graphqlExpress, graphiqlExpress } = require('apollo-server-express');
 const { makeExecutableSchema } = require('graphql-tools');
-const { getAllGames } = require('./db.js')
-// Some fake data
-const books = [
-  {
-    title: "Harry Potter and the Sorcerer's stone",
-    author: 'J.K. Rowling',
-  },
-  {
-    title: 'Jurassic Park',
-    author: 'Michael Crichton',
-  },
-];
+const { getAllGames, insertGame } = require('./db.js')
 
 // The GraphQL schema in string form
 const typeDefs = `
@@ -35,10 +24,9 @@ const resolvers = {
     },
   },
   Mutation: {
-    addGames: (obj, args) => {
+    addGames: async (obj, args) => {
       //在这里执行db操作
-      games.push(args)
-      console.log(args)
+      const res = await insertGame(args);
     }
   }
 };
@@ -58,11 +46,7 @@ app.use(cors({
 }))
 
 // The GraphQL endpoint
-app.use('/graphql', bodyParser.json(), graphqlExpress((req) => {
-  return {
-    schema,
-  }
-}));
+app.use('/graphql', bodyParser.json(), graphqlExpress(() => (schema)));
 
 // GraphiQL, a visual editor for queries
 app.use('/graphiql', graphiqlExpress({ endpointURL: '/graphql' }));
