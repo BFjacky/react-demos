@@ -31,23 +31,41 @@ const QueryComponent = () => (
     </Query>
 );
 const MutationComponent = () => {
-    let input;
+    let input1, input2;
     return (
-        <Mutation mutation={ADD_GAMES}>
+        <Mutation
+            mutation={ADD_GAMES}
+            update={(cache, { data }) => {
+                const { games } = cache.readQuery({ query: GET_GAMES });
+                console.log(`readQuery:::`, data)
+                cache.writeQuery({
+                    query: GET_GAMES,
+                    data: { games: games.concat() }
+                });
+            }}
+        >
             {(addGames, { data }) => (
                 <div>
                     <form
                         onSubmit={e => {
                             e.preventDefault();
-                            addGames({ variables: { name: "wow", price: "98" } });
-                            input.value = "";
+                            addGames({ variables: { name: input1.value, price: input2.value } });
+                            input1.value = "";
+                            input2.value = "";
                         }}
                     >
-                        <input
+                        name:<input
                             ref={node => {
-                                input = node;
+                                input1 = node;
                             }}
                         />
+                        <br />
+                        price :<input
+                            ref={node => {
+                                input2 = node;
+                            }}
+                        />
+                        <br />
                         <button type="submit">Add Game</button>
                     </form>
                 </div>
@@ -59,8 +77,8 @@ const MutationComponent = () => {
 class MyComponent extends Component {
     render() {
         return <div>
-            1<QueryComponent></QueryComponent>
-            2<MutationComponent></MutationComponent>
+            查看游戏:::<QueryComponent></QueryComponent>
+            添加游戏:::<MutationComponent></MutationComponent>
         </div>;
     }
 }
